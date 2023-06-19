@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95647f1f2f1f4e345bd2d4d30cc85b85, type: 3}
+  m_Name: ABConfig
+  m_EditorClassIdentifier: 
+  RootABList:
+  - Assets/Editor/ABConfig/JsonInformation
+  - Assets/GameData/Art/Audio
+  - Assets/GameData/Art/Font
+  - Assets/GameData/Art/Sprite
+  - Assets/GameData/Art/Texture
+  - Assets/GameData/Art/Tilemap
+  - Assets/GameData/Table
+  - Assets/GameData/Prefabs/Hotfix
+  - Assets/GameData/Prefabs/UI
+  - Assets/GameData/Prefabs/Game
+  TrueABList:
+  - path: Assets/Editor/ABConfig/JsonInformation
+    abName: jsoninformation
+  - path: Assets/GameData/Art/Font
+    abName: font
+  - path: Assets/GameData/Art/Sprite/Map
+    abName: spritemap
+  - path: Assets/GameData/Art/Sprite/Monster
+    abName: spritemonster
+  - path: Assets/GameData/Art/Sprite/Role
+    abName: spriterole
+  - path: Assets/GameData/Art/Sprite/UI
+    abName: spriteui
+  - path: Assets/GameData/Art/Tilemap/Map
+    abName: tilemapmap
+  - path: Assets/GameData/Art/Tilemap
+    abName: tilemap
+  - path: Assets/GameData/Table
+    abName: table
+  - path: Assets/GameData/Prefabs/Hotfix
+    abName: hotfix
+  - path: Assets/GameData/Prefabs/UI/Btns
+    abName: uibtns
+  - path: Assets/GameData/Prefabs/UI/Common
+    abName: uicommon
+  - path: Assets/GameData/Prefabs/UI/Main
+    abName: uimain
+  - path: Assets/GameData/Prefabs/UI/Menu
+    abName: uimenu
+  - path: Assets/GameData/Prefabs/Game/Entity
+    abName: gameentity
+  - path: Assets/GameData/Prefabs/Game/Map
+    abName: gamemap
