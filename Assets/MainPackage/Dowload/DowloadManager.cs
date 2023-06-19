@@ -61,17 +61,18 @@ namespace MainPackage
         /// </summary>
         public void StartDowload()
         {
+            //编辑器模式不下载
             if (GameEntry.Instance.IsEditorMode)
             {
                 SavePath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + "AssetBundle/";
-            }
-            else
-            {
-                SavePath = Application.persistentDataPath + "/AssetBundle/";
+                GameEntry.Instance.WinLoading.IsInitEnd = true;
+                IsDowloadEnd = true;
+                return;
             }
 
+            SavePath = Application.persistentDataPath + "/AssetBundle/";
             _currRetry = 0;
-            GameEntry.Instance.StartCoroutine(DowloadXml(DownloadUrl + ABMd5InfoName, 
+            GameEntry.Instance.StartCoroutine(DowloadXml(DownloadUrl + ABMd5InfoName,
                 () => GameEntry.Instance.StartCoroutine(DownloadRely())));
         }
 
@@ -130,6 +131,7 @@ namespace MainPackage
                 var abMd5Info = ABMd5InfoList[i];
                 //开始下载AB包
                 bool isComplete = false;
+                _currRetry = 0;
                 GameEntry.Instance.StartCoroutine(DownloadABPackage(abMd5Info.ABName, () => isComplete = true));
                 //等待加载成功
                 yield return new WaitUntil(() => isComplete);

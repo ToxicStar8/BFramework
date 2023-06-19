@@ -102,17 +102,30 @@ namespace MainPackage
         private IEnumerator DownloadABPackage()
         {
             DowloadManager.StartDowload();
+            Log(E_Log.Framework, "AB包存放路径为", DowloadManager.SavePath);
 
             yield return new WaitUntil(() => DowloadManager.IsDowloadEnd);
 
             Log(E_Log.Framework, "热更代码", "启动中");
-            Assembly ass = null;
             if (!IsEditorMode || IsRunABPackage)
             {
                 //下载完资源后 直接本地加载
                 byte[] assemblyData = File.ReadAllBytes(DowloadManager.SavePath + _hotfixDllName);
-                ass = Assembly.Load(assemblyData);
+                Assembly ass = Assembly.Load(assemblyData);
                 Log(E_Log.Framework, "热更代码", "DLL加载完毕");
+                //原生加载热更
+                var abPackage = AssetBundle.LoadFromFile(DowloadManager.SavePath + "hotfix");
+                var hotfixObj = abPackage.LoadAsset<GameObject>("HotUpdatePrefab.prefab");
+                GameObject hotfixPrefab = Instantiate(hotfixObj, transform);
+                hotfixPrefab.name = "[Hotfix]";
+            }
+            else
+            {
+#if UNITY_EDITOR
+                var hotfixObj = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/GameData/Prefabs/Hotfix/HotUpdatePrefab.Prefab");
+                GameObject hotfixPrefab = Instantiate(hotfixObj, transform);
+                hotfixPrefab.name = "[Hotfix]";
+#endif
             }
 
 //#if UNITY_WEBGL && !UNITY_EDITOR
@@ -121,12 +134,7 @@ namespace MainPackage
 //            MethodInfo method = entryType.GetMethod("Start");
 //            method.Invoke(null, null);
 //#else
-            //原生加载热更
-            var abPackage = AssetBundle.LoadFromFile(DowloadManager.SavePath + "hotfix");
-            var hotfixObj = abPackage.LoadAsset<GameObject>("HotUpdatePrefab.prefab");
-            GameObject hotfixPrefab = Instantiate(hotfixObj, transform);
-            hotfixPrefab.name = "[Hotfix]";
-            //abPackage.Unload(true);
+
 //#endif
         }
 
@@ -142,6 +150,7 @@ namespace MainPackage
         private void OnApplicationQuit()
         {
             //先执行
+
         }
 
         private void OnDestroy()
