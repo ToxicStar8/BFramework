@@ -23,9 +23,17 @@
 //        /// </summary>
 //        public static string ABOutPath = Application.dataPath.Substring(0,Application.dataPath .Length - "Assets".Length) + "AssetBundle";
 //        /// <summary>
-//        /// 脚本DLL输出路径
+//        /// 脚本Dll输出路径
 //        /// </summary>
-//        public static string ScriptOutPath = Application.dataPath.Substring(0,Application.dataPath .Length - "Assets".Length) + "HybridCLRData/HotUpdateDlls/" + EditorUserBuildSettings.activeBuildTarget .ToString();
+//        public static string HotfixDllOutPath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + "HybridCLRData/HotUpdateDlls/" + EditorUserBuildSettings.activeBuildTarget.ToString();
+//        /// <summary>
+//        /// AotDll输出路径
+//        /// </summary>
+//        public static string AotDllOutPath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + "HybridCLRData/AssembliesPostIl2CppStrip/" + EditorUserBuildSettings.activeBuildTarget.ToString();
+//        /// <summary>
+//        /// HotfixDll输出路径
+//        /// </summary>
+//        public static string HotfixDllPath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + ConstDefine.HotfixPath;
 //        //依赖信息Json的路径
 //        private static string _jsoninformationPath => ConstDefine.JsoninformationPath;
 //        private static ABConfig _abConfig => AssetDatabase.LoadAssetAtPath<ABConfig>(ConstDefine.ABConfigPath);
@@ -41,17 +49,19 @@
 //                Directory.Delete(ABOutPath, true);
 //            }
 //            Directory.CreateDirectory(ABOutPath);
-//            //3.设置打包名通过路径
+//            //3.处理热更DLL和AOTDLL
+//            MoveHotfixDllAndAotDll();
+//            //4.设置打包名通过路径
 //            SetABNameByPath();
-//            //4.存储依赖关系表（如果用Unity自带的依赖管理可以忽略）
+//            //5.存储依赖关系表（如果用Unity自带的依赖管理可以忽略）
 //            SaveABPackageToJson();
-//            //5.真正打ab包的地方，打包实际上就是一句话
+//            //6.真正打ab包的地方，打包实际上就是一句话
 //            BuildPipeline.BuildAssetBundles(ABOutPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-//            //6.把不需要的依赖文件删除
+//            //7.把不需要的依赖文件删除
 //            DeleteRelyOnFile();
-//            //7.生成MD5校验文件
+//            //8.生成MD5校验文件
 //            SaveABMD5ToXML();
-//            //8.清除AB包标签
+//            //9.清除AB包标签
 //            ClearABName();
 //            //打开文件夹
 //            OpenFileTools.OpenFile(ABOutPath);
@@ -59,6 +69,47 @@
 //            System.GC.Collect();
 //            //刷新编辑器
 //            AssetDatabase.Refresh();
+//        }
+
+//        /// <summary>
+//        /// 清空目录下的Dll
+//        /// </summary>
+//        private static void ClearHotfixDirDll()
+//        {
+//            var dir = new DirectoryInfo(HotfixDllPath);
+//            foreach (var item in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+//            {
+//                if (item.Extension == ".bytes")
+//                {
+//                    File.Delete(item.FullName);
+//                }
+//            }
+//        }
+
+//        /// <summary>
+//        /// 处理热更Dll和AotDll
+//        /// </summary>
+//        private static void MoveHotfixDllAndAotDll()
+//        {
+//            //清空目录下的Dll
+//            ClearHotfixDirDll();
+
+//            //热更Dll
+//            var dllPath = HotfixDllOutPath + "/" + ConstDefine.HotfixDllName;
+//            if (File.Exists(dllPath))
+//            {
+//                File.Copy(dllPath, HotfixDllPath + ConstDefine.HotfixDllName + ".bytes");
+//            }
+//            else
+//            {
+//                Debug.LogError("DLL文件为空");
+//            }
+
+//            //AotDll
+//            foreach (var dll in AOTGenericReferences.PatchedAOTAssemblyList)
+//            {
+//                File.Copy(AotDllOutPath + "/" + dll, HotfixDllPath + dll + ".bytes");
+//            }
 //        }
 
 //        /// <summary>
@@ -141,23 +192,7 @@
 //                    ABMd5 = Md5Util.GetMd5ByPath(path),
 //                });
 //            }
-//            Debug.Log("ScriptOutPath="+ ScriptOutPath);
-//            //添加脚本热更的信息
-//            var dllPath = ScriptOutPath + "/" + ConstDefine.HotfixDllName;
-//            if (File.Exists(dllPath))
-//            {
-//                list.Add(new ABMd5Info()
-//                {
-//                    ABName = ConstDefine.HotfixDllName,
-//                    ABSize = File.ReadAllBytes(dllPath).Length,
-//                    ABMd5 = Md5Util.GetMd5ByPath(dllPath),
-//                });
-//                File.Move(dllPath, ABOutPath + "/" + ConstDefine.HotfixDllName);
-//            }
-//            else
-//            {
-//                Debug.LogError("DLL文件为空");
-//            }
+//            Debug.Log("ScriptOutPath="+ HotfixDllOutPath);
 //            //输出资源索引信息
 //            using (var fileUpdateInfo = File.CreateText(ABOutPath + "/" + ConstDefine.ABMd5InfoName))
 //            {

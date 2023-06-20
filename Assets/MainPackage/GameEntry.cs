@@ -111,11 +111,6 @@ namespace MainPackage
                         HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HybridCLR.HomologousImageMode.Consistent);
                     }
                 }
-                //foreach (var item in AOTGenericReferences.PatchedAOTAssemblyList)
-                //{
-                //    var textAsset = abPackage.LoadAsset<TextAsset>(item + ".bytes");
-                //    HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HybridCLR.HomologousImageMode.Consistent);
-                //}
                 Log(E_Log.Framework, "元数据", "补充完毕");
                 //原生加载热更
                 var hotfixObj = abPackage.LoadAsset<GameObject>("HotUpdatePrefab.prefab");
