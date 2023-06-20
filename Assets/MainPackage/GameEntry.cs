@@ -63,17 +63,7 @@ namespace MainPackage
         /// <summary>
         /// 热更的DLL名
         /// </summary>
-        private string _hotfixDllName = "Assembly-CSharp.dll";
-
-        /// <summary>
-        /// Update回调
-        /// </summary>
-        public Action UpdateCallback;
-
-        /// <summary>
-        /// 退出回调回调
-        /// </summary>
-        public Action DisposeCallback;
+        private string _hotfixDllName = "Assembly-CSharp.dll.bytes";
 
         public static GameEntry Instance { private set; get; }
 
@@ -88,11 +78,7 @@ namespace MainPackage
 
         private void Start()
         {
-            //限定60fps
-            Application.targetFrameRate = 60;
-
             DowloadManager = new DowloadManager();
-
             StartCoroutine(DownloadABPackage());
         }
 
@@ -107,56 +93,49 @@ namespace MainPackage
             yield return new WaitUntil(() => DowloadManager.IsDowloadEnd);
 
             Log(E_Log.Framework, "热更代码", "启动中");
+            Assembly ass = null;
             if (!IsEditorMode || IsRunABPackage)
             {
-                //下载完资源后 直接本地加载
-                byte[] assemblyData = File.ReadAllBytes(DowloadManager.SavePath + _hotfixDllName);
-                Assembly ass = Assembly.Load(assemblyData);
-                Log(E_Log.Framework, "热更代码", "DLL加载完毕");
-                //原生加载热更
+                //下载完资源后 加载热更Dll和AotDll的AB包
                 var abPackage = AssetBundle.LoadFromFile(DowloadManager.SavePath + "hotfix");
+                //加载DLL
+                var assemblyData = abPackage.LoadAsset<TextAsset>(_hotfixDllName);
+                ass = Assembly.Load(assemblyData.bytes);
+                Log(E_Log.Framework, "热更代码", "DLL加载完毕");
+                //补充元数据
+                foreach (var assetName in abPackage.GetAllAssetNames())
+                {
+                    if (assetName.EndsWith(".bytes") && assetName != _hotfixDllName)
+                    {
+                        var textAsset = abPackage.LoadAsset<TextAsset>(assetName);
+                        HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HybridCLR.HomologousImageMode.Consistent);
+                    }
+                }
+                //foreach (var item in AOTGenericReferences.PatchedAOTAssemblyList)
+                //{
+                //    var textAsset = abPackage.LoadAsset<TextAsset>(item + ".bytes");
+                //    HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HybridCLR.HomologousImageMode.Consistent);
+                //}
+                Log(E_Log.Framework, "元数据", "补充完毕");
+                //原生加载热更
                 var hotfixObj = abPackage.LoadAsset<GameObject>("HotUpdatePrefab.prefab");
                 GameObject hotfixPrefab = Instantiate(hotfixObj, transform);
                 hotfixPrefab.name = "[Hotfix]";
+
+                //反射加载
+                //Type entryType = ass.GetType("GameData.HotUpdateMain");
+                //var hotfixPrefab = new GameObject();
+                //hotfixPrefab.AddComponent(entryType);
+                //hotfixPrefab.name = "[Hotfix]";
             }
+#if UNITY_EDITOR
             else
             {
-#if UNITY_EDITOR
-                var hotfixObj = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/GameData/Prefabs/Hotfix/HotUpdatePrefab.Prefab");
+                var hotfixObj = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Hotfix/HotUpdatePrefab.Prefab");
                 GameObject hotfixPrefab = Instantiate(hotfixObj, transform);
                 hotfixPrefab.name = "[Hotfix]";
-#endif
             }
-
-//#if UNITY_WEBGL && !UNITY_EDITOR
-//            WebGL目前在2021版本不支持脚本挂载在资源上加载热更的方式 使用反射特殊处理（最新版本已修复，直接使用原生加载即可）
-//            Type entryType = ass.GetType("GameData.HotUpdateMainByMethod");
-//            MethodInfo method = entryType.GetMethod("Start");
-//            method.Invoke(null, null);
-//#else
-
-//#endif
-        }
-
-        private void Update()
-        {
-            UpdateCallback?.Invoke();
-
-#if UNITY_EDITOR
-            Time.timeScale = TimeScale;
 #endif
-        }
-
-        private void OnApplicationQuit()
-        {
-            //先执行
-
-        }
-
-        private void OnDestroy()
-        {
-            //再执行
-            DisposeCallback?.Invoke();
         }
 
         /// <summary>
@@ -174,6 +153,9 @@ namespace MainPackage
             return rect;
         }
 
+        /// <summary>
+        /// Log
+        /// </summary>
         public void Log(E_Log logType, string title = null, string content = null)
         {
             string tempStr = string.Empty;

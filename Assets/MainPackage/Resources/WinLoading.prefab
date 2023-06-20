@@ -509,7 +509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4168740825959165514}
   - component: {fileID: 8797439433153222460}
-  - component: {fileID: 1673597033084282064}
+  - component: {fileID: 246221929599428720}
   m_Layer: 5
   m_Name: Img_Mask
   m_TagString: Untagged
@@ -545,7 +545,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7197975587558380137}
   m_CullTransparentMesh: 1
---- !u!114 &1673597033084282064
+--- !u!114 &246221929599428720
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -554,11 +554,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7197975587558380137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b011767f7b39c3246b1734ff2d52e0a3, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5568628, g: 0.5568628, b: 0.5568628, a: 1}
+  m_Color: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
