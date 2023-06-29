@@ -47,9 +47,9 @@ namespace MainPackage
         public bool IsDowloadEnd { private set; get; } = false;
 
         /// <summary>
-        /// 项目的AB包下载地址
+        /// 项目的AB包下载地址 空为StreamingAssets
         /// </summary>
-        public string DownloadUrl = "toxicstar.top/app/Test/CDN/";
+        public string DownloadUrl = "";
 
         /// <summary>
         /// AB包MD5信息名（用于比对需要更新的AB包）
@@ -65,6 +65,15 @@ namespace MainPackage
             if (GameEntry.Instance.IsEditorMode)
             {
                 SavePath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + "AssetBundle/";
+                GameEntry.Instance.WinLoading.IsInitEnd = true;
+                IsDowloadEnd = true;
+                return;
+            }
+
+            if(string.IsNullOrWhiteSpace(DownloadUrl))
+            {
+                SavePath = Application.streamingAssetsPath + "/";
+                GameEntry.Instance.Log(E_Log.Framework, "存放在StreamingAssets中，无需下载");
                 GameEntry.Instance.WinLoading.IsInitEnd = true;
                 IsDowloadEnd = true;
                 return;

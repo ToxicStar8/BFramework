@@ -82,13 +82,19 @@ namespace MainPackage
             StartCoroutine(DownloadABPackage());
         }
 
+#if UNITY_EDITOR
+        private void Update()
+        {
+            Time.timeScale = TimeScale;
+        }
+#endif
+
         /// <summary>
         /// 开始下载AB包
         /// </summary>
         private IEnumerator DownloadABPackage()
         {
             DowloadManager.StartDowload();
-            Log(E_Log.Framework, "AB包存放路径为", DowloadManager.SavePath);
 
             yield return new WaitUntil(() => DowloadManager.IsDowloadEnd);
 
@@ -96,6 +102,7 @@ namespace MainPackage
             Assembly ass = null;
             if (!IsEditorMode || IsRunABPackage)
             {
+                Log(E_Log.Framework, "AB包存放路径为", DowloadManager.SavePath);
                 //下载完资源后 加载热更Dll和AotDll的AB包
                 var abPackage = AssetBundle.LoadFromFile(DowloadManager.SavePath + "hotfix");
                 //加载DLL
@@ -151,7 +158,7 @@ namespace MainPackage
         /// <summary>
         /// Log
         /// </summary>
-        public void Log(E_Log logType, string title = null, string content = null)
+        public void Log(E_Log logType, string title = null, string content = null, string color = null)
         {
             string tempStr = string.Empty;
             if (title == null || content == null)
@@ -176,6 +183,9 @@ namespace MainPackage
                     break;
                 case E_Log.Error:
                     Debug.Log(string.Format(tempStr, "red", title, content));
+                    break;
+                case E_Log.Custom:
+                    Debug.Log(string.Format(tempStr, color, title, content));
                     break;
             }
         }
@@ -202,5 +212,6 @@ namespace MainPackage
         Framework,  //框架Log
         Proto,      //联网Log
         Error,      //错误Log
+        Custom,     //自定义颜色Log
     }
 }
