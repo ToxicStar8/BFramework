@@ -115,7 +115,7 @@ namespace MainPackage
                     if (assetName.EndsWith(".bytes") && assetName != _hotfixDllName)
                     {
                         var textAsset = abPackage.LoadAsset<TextAsset>(assetName);
-                        HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HybridCLR.HomologousImageMode.Consistent);
+                        HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(textAsset.bytes, HybridCLR.HomologousImageMode.SuperSet);
                     }
                 }
                 Log(E_Log.Framework, "元数据", "补充完毕");

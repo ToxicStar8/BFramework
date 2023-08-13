@@ -70,13 +70,10 @@ namespace MainPackage
                 return;
             }
 
-            if(string.IsNullOrWhiteSpace(DownloadUrl))
+            //存放在StreamingAssets目录下 还是得下载
+            if (string.IsNullOrWhiteSpace(DownloadUrl))
             {
-                SavePath = Application.streamingAssetsPath + "/";
-                GameEntry.Instance.Log(E_Log.Framework, "存放在StreamingAssets中，无需下载");
-                GameEntry.Instance.WinLoading.IsInitEnd = true;
-                IsDowloadEnd = true;
-                return;
+                DownloadUrl = Application.streamingAssetsPath + "/";
             }
 
             SavePath = Application.persistentDataPath + "/AssetBundle/";
