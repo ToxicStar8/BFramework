@@ -22,6 +22,7 @@ namespace MainPackage
         /// </summary>
         [SerializeField]
         public GameObject UIRoot;
+        public RectTransform UIRootRect;
 
         /// <summary>
         /// UI根节点下的层级
@@ -78,6 +79,7 @@ namespace MainPackage
 
         private void Start()
         {
+            UIRootRect = UIRoot.GetComponent<RectTransform>();
             DowloadManager = new DowloadManager();
             StartCoroutine(DownloadABPackage());
         }
@@ -149,7 +151,7 @@ namespace MainPackage
         {
             if (!_uiRootDic.TryGetValue(uiLevel, out var rect))
             {
-                rect = Instance.UIRoot.transform.Find(uiLevel.ToString()) as RectTransform;
+                rect = Instance.UIRootRect.Find(uiLevel.ToString()) as RectTransform;
                 _uiRootDic[uiLevel] = rect;
             }
             return rect;
