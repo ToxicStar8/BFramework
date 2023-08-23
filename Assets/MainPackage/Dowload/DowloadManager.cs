@@ -49,7 +49,7 @@ namespace MainPackage
         /// <summary>
         /// 项目的AB包下载地址 空为StreamingAssets
         /// </summary>
-        public string DownloadUrl = "";
+        public string DownloadUrl = "http://175.178.9.175/";
 
         /// <summary>
         /// AB包MD5信息名（用于比对需要更新的AB包）

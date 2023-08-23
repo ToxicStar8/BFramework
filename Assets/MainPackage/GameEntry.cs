@@ -22,6 +22,7 @@ namespace MainPackage
         /// </summary>
         [SerializeField]
         public GameObject UIRoot;
+        [SerializeField]
         public RectTransform UIRootRect;
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace MainPackage
         /// <summary>
         /// 下载管理器
         /// </summary>
-        public DowloadManager DowloadManager;
+        public DowloadManager DowloadManager { private set; get; }
 
         /// <summary>
         /// 热更的DLL名
