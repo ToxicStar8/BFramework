@@ -49,7 +49,8 @@ namespace MainPackage
         /// <summary>
         /// 项目的AB包下载地址 空为StreamingAssets
         /// </summary>
-        public string DownloadUrl = "http://175.178.9.175/";
+        public string DownloadUrl = "";
+        //public string DownloadUrl = "http://toxicstar.top/app/Test/CDN";
 
         /// <summary>
         /// AB包MD5信息名（用于比对需要更新的AB包）

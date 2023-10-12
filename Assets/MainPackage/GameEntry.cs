@@ -182,10 +182,13 @@ namespace MainPackage
                     Debug.Log(string.Format(tempStr, "magenta", title, content));
                     break;
                 case E_Log.Proto:
-                    Debug.Log(string.Format(tempStr, "yellow", title, content));
+                    Debug.Log(string.Format(tempStr, "#00ffff", title, content));
                     break;
                 case E_Log.Error:
                     Debug.Log(string.Format(tempStr, "red", title, content));
+                    break;
+                case E_Log.Warring:
+                    Debug.Log(string.Format(tempStr, "yellow", title, content));
                     break;
                 case E_Log.Custom:
                     Debug.Log(string.Format(tempStr, color, title, content));
@@ -215,6 +218,7 @@ namespace MainPackage
         Framework,  //框架Log
         Proto,      //联网Log
         Error,      //错误Log
+        Warring,    //警告Log
         Custom,     //自定义颜色Log
     }
 }
