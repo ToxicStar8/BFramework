@@ -80,7 +80,6 @@ namespace MainPackage
 
         private void Start()
         {
-            UIRootRect = UIRoot.GetComponent<RectTransform>();
             DowloadManager = new DowloadManager();
             StartCoroutine(DownloadABPackage());
         }
@@ -102,7 +101,6 @@ namespace MainPackage
             yield return new WaitUntil(() => DowloadManager.IsDowloadEnd);
 
             Log(E_Log.Framework, "热更代码", "启动中");
-            Assembly ass = null;
             if (!IsEditorMode || IsRunABPackage)
             {
                 Log(E_Log.Framework, "AB包存放路径为", DowloadManager.SavePath);
@@ -110,7 +108,7 @@ namespace MainPackage
                 var abPackage = AssetBundle.LoadFromFile(DowloadManager.SavePath + "hotfix");
                 //加载DLL
                 var assemblyData = abPackage.LoadAsset<TextAsset>(_hotfixDllName);
-                ass = Assembly.Load(assemblyData.bytes);
+                Assembly ass = Assembly.Load(assemblyData.bytes);
                 Log(E_Log.Framework, "热更代码", "DLL加载完毕");
                 //补充元数据
                 foreach (var assetName in abPackage.GetAllAssetNames())
