@@ -159,6 +159,7 @@ namespace MainPackage
         /// <summary>
         /// Log
         /// </summary>
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
         public void Log(E_Log logType, string title = null, string content = null, string color = null)
         {
             string tempStr = string.Empty;

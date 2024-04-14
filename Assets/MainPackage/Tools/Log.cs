@@ -4,12 +4,11 @@
  * 创建时间：2023/01/08 20:40:23
  *********************************************/
 
-using MainPackage;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace Framework
+namespace MainPackage
 {
     public class Log : MonoBehaviour
     {
