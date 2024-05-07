@@ -39,11 +39,6 @@ namespace MainPackage
         private RectTransform Rt_Error;
 
         /// <summary>
-        /// AB包是否初始化完毕
-        /// </summary>
-        public bool IsInitEnd = false;
-
-        /// <summary>
         /// 是否加载中
         /// </summary>
         private bool _isLoading = false;
@@ -80,7 +75,7 @@ namespace MainPackage
         private void Update()
         {
             //加载完毕就关闭界面
-            if (IsInitEnd)
+            if (GameEntry.Instance.DowloadManager.IsDowloadEnd)
             {
                 if (gameObject.activeSelf)
                 {

@@ -54,6 +54,8 @@ namespace MainPackage
 #if UNITY_EDITOR
         [Header("时间倍率")]
         [SerializeField]
+        public bool IsEnableTimeScale;
+        [SerializeField]
         public float TimeScale;
 #endif
 
@@ -87,7 +89,10 @@ namespace MainPackage
 #if UNITY_EDITOR
         private void Update()
         {
-            Time.timeScale = TimeScale;
+            if (IsEnableTimeScale)
+            {
+                Time.timeScale = TimeScale;
+            }
         }
 #endif
 
@@ -184,10 +189,10 @@ namespace MainPackage
                     Debug.Log(string.Format(tempStr, "#00ffff", title, content));
                     break;
                 case E_Log.Error:
-                    Debug.Log(string.Format(tempStr, "red", title, content));
+                    Debug.LogError(string.Format(tempStr, "red", title, content));
                     break;
                 case E_Log.Warring:
-                    Debug.Log(string.Format(tempStr, "yellow", title, content));
+                    Debug.LogWarning(string.Format(tempStr, "yellow" , title, content));
                     break;
                 case E_Log.Custom:
                     Debug.Log(string.Format(tempStr, color, title, content));

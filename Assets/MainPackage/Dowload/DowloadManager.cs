@@ -66,7 +66,6 @@ namespace MainPackage
             if (GameEntry.Instance.IsEditorMode)
             {
                 SavePath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + "AssetBundle/";
-                GameEntry.Instance.WinLoading.IsInitEnd = true;
                 IsDowloadEnd = true;
                 return;
             }
@@ -79,8 +78,7 @@ namespace MainPackage
 
             SavePath = Application.persistentDataPath + "/AssetBundle/";
             _currRetry = 0;
-            GameEntry.Instance.StartCoroutine(DowloadXml(DownloadUrl + ABMd5InfoName,
-                () => GameEntry.Instance.StartCoroutine(DownloadRely())));
+            GameEntry.Instance.StartCoroutine(DowloadXml(DownloadUrl + ABMd5InfoName);
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace MainPackage
         /// <param name="abName"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        private IEnumerator DowloadXml(string url, Action callback)
+        private IEnumerator DowloadXml(string url)
         {
             //检查资源变动
             GameEntry.Instance.Log(E_Log.Framework, "检查更新中……");
@@ -105,7 +103,7 @@ namespace MainPackage
                 //如果还有重试次数 重试
                 if (_currRetry <= 3)
                 {
-                    GameEntry.Instance.StartCoroutine(DowloadXml(url, callback));
+                    GameEntry.Instance.StartCoroutine(DowloadXml(url));
                     yield break;
                 }
                 //打印错误 退出
@@ -120,7 +118,8 @@ namespace MainPackage
             var jsonData = _request.downloadHandler.text.ToString();
             GameEntry.Instance.Log(E_Log.Framework, jsonData);
             ABMd5InfoList = JsonMapper.ToObject<List<ABMd5Info>>(jsonData);
-            callback?.Invoke();
+            //下载其余的AB包
+            GameEntry.Instance.StartCoroutine(DownloadRely());
         }
 
         /// <summary>
@@ -146,7 +145,6 @@ namespace MainPackage
             //3.清空状态
             GameEntry.Instance.Log(E_Log.Framework, "全部下载完毕");
             yield return null;
-            GameEntry.Instance.WinLoading.IsInitEnd = true;
             IsDowloadEnd = true;
             //4.不做热重载 清除md5数据
             ABMd5InfoList.Clear();
