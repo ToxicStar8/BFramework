@@ -78,7 +78,7 @@ namespace MainPackage
 
             SavePath = Application.persistentDataPath + "/AssetBundle/";
             _currRetry = 0;
-            GameEntry.Instance.StartCoroutine(DowloadXml(DownloadUrl + ABMd5InfoName);
+            GameEntry.Instance.StartCoroutine(DowloadXml(DownloadUrl + ABMd5InfoName));
         }
 
         /// <summary>
